@@ -1,6 +1,6 @@
 import React from 'react';
 import logoimage from '../assets/the_shoes_house-02.avif';
-import { About } from './about';
+import { About } from './About';
 import App from '../App';
 import adminpanel from './adminpanel';
 import { Link } from 'react-router-dom';
