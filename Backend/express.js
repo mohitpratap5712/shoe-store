@@ -8,6 +8,9 @@ import isAdmin from "./middleware/admin.js";
 import Product from "./models/Product.js";
 import User from "./models/User.js";
 import Order from "./models/orderSchema.js"
+import dotenv from "dotenv";
+
+dotenv.config();
 const app = express();
 const PORT = 3000;
 
@@ -24,9 +27,10 @@ const JWT_SECRET = "mysecretkey";
 // MongoDB Connection
 // =======================
 mongoose
-  .connect("mongodb://127.0.0.1:27017/shoestore")
+  // .connect("mongodb://127.0.0.1:27017/shoestore")
+  .connect (process.env.MONGODB_URL)
   .then(() => {
-    console.log("✅ Database Connected Successfully");
+    console.log("✅ Database Altroz Connected Successfully");
   })
   .catch((err) => {
     console.log("❌ Database Error");
