@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt";
 import auth from "./middleware/auth.js";
 import isAdmin from "./middleware/admin.js";
-import Product from "./models/Product.js";
+import Product from "./models/product.js";
 import User from "./models/User.js";
 import Order from "./models/orderSchema.js"
 import dotenv from "dotenv";
