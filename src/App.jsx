@@ -1,13 +1,13 @@
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/navbar";
 import { About } from "./components/about";
 import { Contact } from "./components/contact";
-import Register from "./components/Register";
+import Register from "./components/register";
 import Login from "./components/login";
 
 import Adminpanel from "./components/adminpanel";
-import { Cardopener } from "./components/Cardopener";
+import { Cardopener } from "./components/cardopener";
 import { Cards } from "./components/cards";
 
 import Banner from "./assets/shoebanner.jpg";
