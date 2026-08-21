@@ -37,7 +37,7 @@ const Login = () => {
 
 
       // Save JWT
-      localStorage.setItem(
+      localStorage.setItem( 
         "token",
         response.data.token
       );

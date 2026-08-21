@@ -17,7 +17,12 @@ const PORT = process.env.PORT||3000;
 // =======================
 // Middleware
 // =======================
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://shoe-store-1-5r1i.onrender.com",
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 
