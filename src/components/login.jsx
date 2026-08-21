@@ -29,7 +29,7 @@ const Login = () => {
     try {
 
       const response = await axios.post(
-        "https://shoe-store-h5gu.onrender.com/users",
+        "https://shoe-store-h5gu.onrender.com/login",
         user
       );
 
