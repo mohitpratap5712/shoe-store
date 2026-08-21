@@ -29,7 +29,7 @@ const AdminPanel = () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "http://localhost:3000/data",
+        "https://shoe-store-h5gu.onrender.com/data",
         product,
         {
           headers: {
@@ -56,7 +56,7 @@ const AdminPanel = () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        "http://localhost:3000/orders",
+        "https://shoe-store-h5gu.onrender.com/orders",
         {
           headers: {
             Authorization: `Bearer ${token}`

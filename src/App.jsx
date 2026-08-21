@@ -30,7 +30,7 @@ function App() {
   const fetchData = async () => {
     try {
       const data = await axios.get(
-        "http://localhost:3000/products"
+        "https://shoe-store-h5gu.onrender.com/products"
       )
 
       setProduct(data.data.products)
@@ -55,7 +55,7 @@ function App() {
     try {
 
       const response = await axios.post(
-        "http://localhost:3000/orders",
+        "https://shoe-store-h5gu.onrender.com/orders",
         {
           productId: productId.productId,
           quantity: 1

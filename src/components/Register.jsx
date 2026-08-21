@@ -20,7 +20,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/register",
+        "https://shoe-store-h5gu.onrender.com/register",
         user
       );
 
