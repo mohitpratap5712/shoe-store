@@ -1,30 +1,41 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import auth from "./middleware/auth.js";
 import isAdmin from "./middleware/admin.js";
 import Product from "./models/product.js";
 import User from "./models/User.js";
-import Order from "./models/orderSchema.js"
+import Order from "./models/orderSchema.js";
 import dotenv from "dotenv";
 
 dotenv.config();
+
 const app = express();
-const PORT = process.env.PORT||3000;
+const PORT = process.env.PORT || 3000;
 
-// =======================
-// Middleware
-// =======================
-app.use(
-  cors({
-    origin: "https://shoe-store-1-5r1i.onrender.com",
-    credentials: true,
-  })
-);
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://shoe-store-1-5r1i.onrender.com"
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS blocked origin: ${origin}`));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
-
 
 const JWT_SECRET = "mysecretkey";
 

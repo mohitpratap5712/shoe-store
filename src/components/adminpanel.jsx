@@ -7,9 +7,41 @@ const AdminPanel = () => {
 
   const [product, setProduct] = useState({
     title: "",
-    price: ""
+    price: "",
+    image:""
   });
 
+  //image handle 
+  const handleImageChange = async (e) => {
+  const file = e.target.files[0];
+
+  if (!file) return;
+
+  try {
+    const formData = new FormData();
+
+    formData.append("file", file);
+    formData.append("upload_preset", "shoe_store");
+
+    const response = await axios.post(
+      "https://api.cloudinary.com/v1_1/bg8uljch/image/upload",
+      formData
+    );
+
+    console.log("Cloudinary:", response.data);
+
+    setProduct((prev) => ({
+      ...prev,
+      image: response.data.secure_url,
+    }));
+
+  } catch (error) {
+    console.log(
+      "Image upload error:",
+      error.response?.data || error.message
+    );
+  }
+};
 
   // Product input
   const handleChange = (e) => {
@@ -18,6 +50,7 @@ const AdminPanel = () => {
       [e.target.name]: e.target.value
     });
   };
+
 
 
   // Add product
@@ -149,6 +182,11 @@ const AdminPanel = () => {
             placeholder="please enter product price"
             onChange={handleChange}
           />
+          <input
+  type="file"
+  accept="image/*"
+  onChange={handleImageChange}
+/>
 
           <input
             type="submit"
