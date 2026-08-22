@@ -5,8 +5,13 @@ export const Cards = ({ image, title, price, handleclick , disabled , productId 
 
   return (
     <div className="h-full w-56 rounded-xl flex flex-col items-center">
-      <img className="w-full h-[65%]" src={image} alt={title} />
-
+{image && (
+  <img
+    className="w-full h-[65%]"
+    src={image}
+    alt={title}
+  />
+)}
       <div className="w-full h-[45%] p-1 bg-white text-xl text-black flex flex-col items-center">
         <b>{title}</b>
 

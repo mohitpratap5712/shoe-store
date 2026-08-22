@@ -73,7 +73,7 @@ function App() {
       console.log(response.data);
 
     } catch (err) {
-      console.log("not work");
+      console.log(err);
     }
     setsuccess(true)
 

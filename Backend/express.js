@@ -173,12 +173,12 @@ app.post("/login", async (req, res) => {
       });
     }
 
-    // const isMatch = await bcrypt.compare(password, user.password);
-    const isMatch = () => {
-      if (password === user.password) {
-        return true
-      }
-    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    // const isMatch = () => {
+    //   if (password === user.password) {
+    //     return true
+    //   }
+    // }
 
     if (!isMatch) {
       return res.status(401).json({
@@ -271,6 +271,7 @@ app.post("/orders", auth, async (req, res) => {
 
     res.status(500).json({
       message: "can't upload the data"
+      
     });
 
   }
