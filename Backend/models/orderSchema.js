@@ -28,6 +28,12 @@ const orderSchema = new mongoose.Schema({
   },
   status: {
     type: String,
+    enum: [
+      'CONFIRMED',
+      'SHIPED',
+      'DILIVERED',
+      'CANCEL',
+  ],
     default: "Pending"
   }
 });

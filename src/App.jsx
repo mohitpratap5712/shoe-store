@@ -9,15 +9,9 @@ import Login from "./components/login";
 import Adminpanel from "./components/adminpanel";
 import { Cardopener } from "./components/Cardopener";
 import { Cards } from "./components/cards";
+import { Cart } from "./components/cart";
 
 import Banner from "./assets/shoebanner.jpg";
-
-import shoe1 from "./assets/adibrown.webp";
-import shoe2 from "./assets/newbalance.webp";
-import shoe3 from "./assets/newbalancewhite.webp";
-import shoe4 from "./assets/addidas.webp";
-import shoe5 from "./assets/newbbalance.webp";
-
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -45,12 +39,32 @@ function App() {
   useEffect(() => {
     fetchData()
   }, [])
+  //add to cart function
+ const addToCart = async (productId, quantity) => {
+  try {
+    const response = await axios.post(
+      "https://shoe-store-h5gu.onrender.com/cart",
+      {
+        productId: productId,
+        quantity: quantity
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
 
+    console.log("Cart response:", response.data);
+
+  } catch (error) {
+    console.log("cart problem", error);
+  }
+};
   // Buy Now Function
   const handleclick = async (productId) => {
     setdisabled(true)
     console.log(productId.productId)
-    console.log(typeof productId )
 
     try {
 
@@ -67,15 +81,16 @@ function App() {
             Authorization: `Bearer ${token} `
           }
         }
-      );
 
+      );
+      setsuccess(true)
       console.log("Backend Response:");
       console.log(response.data);
 
     } catch (err) {
       console.log(err);
     }
-    setsuccess(true)
+
 
     setTimeout(() => {
       setsuccess(false)
@@ -145,6 +160,15 @@ function App() {
           <Login />
         </>
       )
+    },
+    {
+      path: "/cart",
+      element: (
+        <>
+          <Navbar />
+          <Cart />
+        </>
+      )
     }
   ]);
 
@@ -178,16 +202,18 @@ function App() {
           <div className="shoerack relative w-[80%] grid grid-cols-5">
 
 
-            {product.slice(0,5).map((pro)=>{
+            {product.slice(0, 5).map((pro) => {
               return <Cards key={pro._id}
-              image={pro.image}
-              price ={pro.price}
-              title = {pro.title}
-              productId={pro._id}
-              disabled={disabled}
+                image={pro.image}
+                price={pro.price}
+                title={pro.title}
+                productId={pro._id}
+                quantity={1}
+                disabled={disabled}
                 handleclick={handleclick}
-              
-              
+                addToCart={addToCart}
+
+
               />
             }
             )}

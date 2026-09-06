@@ -8,40 +8,40 @@ const AdminPanel = () => {
   const [product, setProduct] = useState({
     title: "",
     price: "",
-    image:""
+    image: ""
   });
 
   //image handle 
   const handleImageChange = async (e) => {
-  const file = e.target.files[0];
+    const file = e.target.files[0];
 
-  if (!file) return;
+    if (!file) return;
 
-  try {
-    const formData = new FormData();
+    try {
+      const formData = new FormData();
 
-    formData.append("file", file);
-    formData.append("upload_preset", "shoe_store");
+      formData.append("file", file);
+      formData.append("upload_preset", "shoe_store");
 
-    const response = await axios.post(
-      "https://api.cloudinary.com/v1_1/bg8uljch/image/upload",
-      formData
-    );
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/bg8uljch/image/upload",
+        formData
+      );
 
-    console.log("Cloudinary:", response.data);
+      console.log("Cloudinary:", response.data);
 
-    setProduct((prev) => ({
-      ...prev,
-      image: response.data.secure_url,
-    }));
+      setProduct((prev) => ({
+        ...prev,
+        image: response.data.secure_url,
+      }));
 
-  } catch (error) {
-    console.log(
-      "Image upload error:",
-      error.response?.data || error.message
-    );
-  }
-};
+    } catch (error) {
+      console.log(
+        "Image upload error:",
+        error.response?.data || error.message
+      );
+    }
+  };
 
   // Product input
   const handleChange = (e) => {
@@ -97,7 +97,7 @@ const AdminPanel = () => {
         }
       );
 
-      console.log("ORDERS:", response.data);
+      // console.log("ORDERS:", response.data);
 
       setOrders(response.data.orders);
 
@@ -123,7 +123,7 @@ const AdminPanel = () => {
       {/* ORDERS */}
 
       <h2>All Orders</h2>
- <h4>{orders.length}</h4>
+      <h4>{orders.length}</h4>
       {orders.map((order) => (
 
 
@@ -153,6 +153,24 @@ const AdminPanel = () => {
           <p>
             Quantity: {order.quantity}
           </p>
+          <p>
+            Status: {order.status}
+          </p>
+
+          <select
+            value={order.status}
+            onChange={(e) =>
+              updateStatus(order._id, e.target.value)
+            }
+          >
+
+            <option value="Pending">Pending</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Shipped">Shipped</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+
+          </select>
 
           <hr />
 
@@ -183,10 +201,10 @@ const AdminPanel = () => {
             onChange={handleChange}
           />
           <input
-  type="file"
-  accept="image/*"
-  onChange={handleImageChange}
-/>
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
 
           <input
             type="submit"

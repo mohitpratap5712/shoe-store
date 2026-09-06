@@ -9,6 +9,7 @@ import Product from "./models/product.js";
 import User from "./models/User.js";
 import Order from "./models/orderSchema.js";
 import dotenv from "dotenv";
+import Cart from "./models/Cart.js";
 
 dotenv.config();
 
@@ -44,7 +45,7 @@ const JWT_SECRET = "mysecretkey";
 // =======================
 mongoose
   // .connect("mongodb://127.0.0.1:27017/shoestore")
-  .connect (process.env.MONGODB_URL)
+  .connect(process.env.MONGODB_URL)
   .then(() => {
     console.log("✅ Database Altroz Connected Successfully");
   })
@@ -113,7 +114,7 @@ app.post("/register", async (req, res) => {
     const newUser = new User({
       name,
       email,
-      password:hashedPassword,
+      password: hashedPassword,
     });
 
     await newUser.save();
@@ -202,9 +203,6 @@ app.post("/login", async (req, res) => {
 
     );
 
-
-
-
     res.status(200).json({
       success: true,
       message: "Login Successful",
@@ -217,8 +215,6 @@ app.post("/login", async (req, res) => {
       },
 
     }
-
-
     );
 
 
@@ -231,6 +227,157 @@ app.post("/login", async (req, res) => {
     });
   }
 });
+//create cart route 
+app.use((req, res, next) => {
+  console.log(req.method, req.url);
+  next();
+});
+app.post("/cart", auth, async (req, res) => {
+  try {
+     console.log("POST /cart HIT");
+        console.log("BODY:", req.body);
+        console.log("USER:", req.user.id);
+
+        const { productId, quantity } = req.body;
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found"
+      });
+    }
+
+    let cart = await Cart.findOne({
+      user: req.user.id
+    });
+
+    // No cart yet
+    if (!cart) {
+      cart = new Cart({
+        user: req.user.id,
+        items: [
+          {
+            product: productId,
+            quantity: 1
+          }
+        ]
+      });
+    } 
+    
+    
+    else {
+      // Check if product already exists
+      const existingItem = cart.items.find(
+        (item) => item.product.toString() === productId
+      );
+
+      if (existingItem) {
+        // Product already exists → increase quantity
+        existingItem.quantity += 1;
+      } 
+      
+      else {
+        // New product → add new item
+        cart.items.push({
+          product: productId,
+          quantity: 1
+        });
+      }
+    }
+
+    await cart.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Cart updated successfully",
+      cart
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error"
+    });
+  }
+});
+app.get("/cart", auth, async (req, res) => {
+  try {
+    const cart = await Cart.findOne({
+      user: req.user.id
+    }).populate("items.product");
+
+    if (!cart) {
+      return res.status(404).json({
+        success: false,
+        message: "Cart is empty"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      cart
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error"
+    });
+  }
+});
+app.put("/cart/:productId", auth, async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const { quantity } = req.body;
+
+    const cart = await Cart.findOne({
+      user: req.user.id
+    });
+
+    if (!cart) {
+      return res.status(404).json({
+        success: false,
+        message: "Cart not found"
+      });
+    }
+
+    const item = cart.items.find(
+      (item) => item.product.toString() === productId
+    );
+
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found in cart"
+      });
+    }
+
+    item.quantity = quantity;
+
+    await cart.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Quantity updated successfully",
+      cart
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server error"
+    });
+  }
+});
+//creates new orders
 app.post("/orders", auth, async (req, res) => {
 
   try {
@@ -253,7 +400,9 @@ app.post("/orders", auth, async (req, res) => {
       product: productId,
       quantity: quantity,
       price: product.price,
-      finalPrice: product.price * quantity
+      finalPrice: product.price * quantity,
+
+
     });
 
     await order.save();
@@ -261,7 +410,8 @@ app.post("/orders", auth, async (req, res) => {
     res.status(201).json({
       success: true,
       message: "Order created successfully",
-      order
+      order,
+
     });
   }
 
@@ -271,7 +421,7 @@ app.post("/orders", auth, async (req, res) => {
 
     res.status(500).json({
       message: "can't upload the data"
-      
+
     });
 
   }
