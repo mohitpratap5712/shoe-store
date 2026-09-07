@@ -227,18 +227,14 @@ app.post("/login", async (req, res) => {
     });
   }
 });
-//create cart route 
-app.use((req, res, next) => {
-  console.log(req.method, req.url);
-  next();
-});
+
 app.post("/cart", auth, async (req, res) => {
   try {
      console.log("POST /cart HIT");
         console.log("BODY:", req.body);
         console.log("USER:", req.user.id);
 
-        const { productId, quantity } = req.body;
+        const { productId, quantity = 1 } = req.body;
 
     const product = await Product.findById(productId);
 
@@ -464,7 +460,7 @@ app.get("/orders", auth, isAdmin, async (req, res) => {
 // =======================
 // Get All Users (Optional)
 // =======================
-app.get("/users", async (req, res) => {
+app.get("/users", auth ,isAdmin, async (req, res) => {
   try {
     const users = await User.find().select("-password");
 

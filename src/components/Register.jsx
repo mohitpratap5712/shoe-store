@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; 
 
 const Register = () => {
+  const [success, Setsucces] = useState(false)
+  const [message , Setmessage] = useState("")
   const [user, setUser] = useState({
     name: "",
     email: "",
     password: "",
   });
-
+  const navigate = useNavigate()
   const handlechange = (e) => {
     setUser({
       ...user,
@@ -23,9 +26,26 @@ const Register = () => {
         "https://shoe-store-h5gu.onrender.com/register",
         user
       );
+      Setmessage(response.data.message)
+   Setsucces(true)
+      setTimeout(() => {
+        Setsucces(false)
+      }, 3000);
+      
 
+      setTimeout(() => {
+         navigate("/login")
+      }, 3000);
+    
+
+    
       console.log(response.data);
- 
+      
+ setUser({
+          name: "",
+          email: "",
+          password: "",
+        })
     } catch (error) {
       console.log(error);
     }
@@ -34,7 +54,7 @@ const Register = () => {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <input 
+        <input
           type="text"
           name="name"
           value={user.name}
@@ -60,7 +80,9 @@ const Register = () => {
 
         <button type="submit">Send to Backend</button>
       </form>
-    </>
+      <div className=""> Backend Response {message} </div>
+      {success && <div className=" w-full h-24 bg-green-500 flex justify-center items-center">register successfull</div>
+      }    </>
   );
 };
 

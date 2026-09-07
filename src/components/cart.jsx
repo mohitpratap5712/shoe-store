@@ -40,7 +40,7 @@ export const Cart = () => {
                         </p>
 
                         <p>
-                            Quantity: {item.quentity}
+                            Quantity: {item.quantity}
                         </p>
                     </div>
 

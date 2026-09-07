@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
 
   const navigate = useNavigate();
-
+ const [success , Setsucces]= useState(false)
   const [user, setUser] = useState({
     email: "",
     password: ""
@@ -35,7 +35,7 @@ const Login = () => {
 
       console.log(response.data);
 
-
+ 
       // Save JWT
       localStorage.setItem( 
         "token",
@@ -49,14 +49,15 @@ const Login = () => {
         JSON.stringify(response.data.user)
       );
 
-
+      //message
+      Setsucces(true)
       // Check role
       if (response.data.user.role === "admin") {
 
         navigate("/adminpanel");
 
       } else {
-
+     
         navigate("/");
 
       }
@@ -76,7 +77,7 @@ const Login = () => {
     <div>
 
       <h1>Login</h1>
-
+  {success && <div className="w-full h-20 bg-green-300 ">login success</div>  }
       <form onSubmit={handleSubmit}>
 
         <input
@@ -98,6 +99,7 @@ const Login = () => {
         <button type="submit">
           Login
         </button>
+      
 
       </form>
 
