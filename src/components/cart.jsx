@@ -9,8 +9,8 @@ export const Cart = () => {
 
     //This is for the increasing the quantity 
     const increaseQuantity = async (productId) => {
-        const token = localStorage.getItem("token ")
-        try {
+ const token = localStorage.getItem("token");
+         try {
             const response = axios.put(`https://shoe-store-h5gu.onrender.com/cart/increase${productId}`,
                 {},
                 {
