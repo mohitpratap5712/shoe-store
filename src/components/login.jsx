@@ -6,11 +6,12 @@ const Login = () => {
 
   const navigate = useNavigate();
  const [success , Setsucces]= useState(false)
+ const [failed , Setfailed] =useState(false)
   const [user, setUser] = useState({
     email: "",
     password: ""
   });
-
+// const username1 = ""
 
   const handleChange = (e) => {
 
@@ -41,6 +42,7 @@ const Login = () => {
         "token",
         response.data.token
       );
+      // username1 = response.data.name
 
 
       // Save user information
@@ -50,7 +52,9 @@ const Login = () => {
       );
 
       //message
-      Setsucces(true)
+      Setsucces(true);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      Setsucces(false);
       // Check role
       if (response.data.user.role === "admin") {
 
@@ -64,6 +68,10 @@ const Login = () => {
 
 
     } catch (error) {
+      Setfailed(true)
+      setTimeout(() => {
+        Setfailed(false)
+      }, 3000);
 
       console.log(error.response?.data);
 
@@ -77,7 +85,10 @@ const Login = () => {
     <div>
 
       <h1>Login</h1>
-  {success && <div className="w-full h-20 bg-green-300 ">login success</div>  }
+  {success && <div className="w-full h-20 bg-green-300 ">login success</div> }
+    {failed && <div className="w-full h-20 bg-red-300 ">Failed Login</div> }
+
+
       <form onSubmit={handleSubmit}>
 
         <input
@@ -94,12 +105,12 @@ const Login = () => {
           placeholder="Password"
           value={user.password}
           onChange={handleChange}
+          
         />
 
         <button type="submit">
           Login
         </button>
-      
 
       </form>
 

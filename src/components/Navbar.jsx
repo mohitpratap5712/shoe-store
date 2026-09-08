@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logoimage from '../assets/the_shoes_house-02.avif';
 import { About } from './About';
 import App from '../App';
 import adminpanel from './adminpanel';
 import { Link } from 'react-router-dom';
 
-const Navbar = () => {
+const Navbar = ({onCartToggle}) => {
+  const [cartClicked, SetcartClicked] = useState(false)
+  let handleclickcart = async ()=>{
+SetcartClicked(true)
+
+  }
  
   return (
     <nav className="flex bg-white-700 h-16 justify-between items-center text-black text-xl p-2">
@@ -21,7 +26,8 @@ const Navbar = () => {
         <li>About</li>
       </ul>
       <div className="items-Cart flex gap-2  ">
-        <button><svg 
+        
+        <button  ><svg 
           xmlns="http://www.w3.org/2000/svg"
           width="30"
           height="54"
@@ -35,7 +41,7 @@ const Navbar = () => {
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg></button>
-        <button><svg
+        <button onClick={onCartToggle}><svg
           xmlns="http://www.w3.org/2000/svg"
           width="30"
           height="54"
@@ -43,6 +49,7 @@ const Navbar = () => {
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
+          
           strokeLinecap="round"
           strokeLinejoin="round"
         >
@@ -72,4 +79,5 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default Navbar ;
+ 

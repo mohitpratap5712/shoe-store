@@ -12,14 +12,18 @@ import { Cards } from "./components/cards";
 import { Cart } from "./components/cart";
 
 import Banner from "./assets/shoebanner.jpg";
-import axios from "axios";
+import axios from "axios"; 
 import { useEffect, useState } from "react";
 
 function App() {
   const [success, setsuccess] = useState(false)
   const [disabled, setdisabled] = useState(false)
+  const [cartSuccess,setcartSuccess] = useState(false)
+  const [openCart,setOpenCart] = useState(false)
   const [product, setProduct] = useState([])
   const token = localStorage.getItem("token")
+
+ const handleToggleCart = () => setOpenCart(!openCart);
 
   const fetchData = async () => {
     try {
@@ -35,6 +39,7 @@ function App() {
       console.log(err)
     }
   }
+     
 
   useEffect(() => {
     fetchData()
@@ -54,6 +59,11 @@ function App() {
         }
       }
     );
+    setcartSuccess(true)
+    setTimeout(() => {
+          setcartSuccess(false)
+
+    }, 3000);
 
     console.log("Cart response:", response.data);
 
@@ -103,7 +113,9 @@ function App() {
       path: "/",
       element: (
         <>
-          <Navbar />
+          <Navbar onCartToggle={handleToggleCart}
+    
+          />
         </>
       ),
     },
@@ -175,6 +187,16 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
+{ openCart &&
+  <div className="cart absolute  top-0 right-0 w-[50%] h-full bg-amber-200 flex flex-col gap-8 items-center justify-center ">
+              <p className=" cursor-pointer absolute  top-0 right-50 " onClick={()=>setOpenCart(false)} >X</p>
+              <h3>HEY {} WELCOME !!</h3>
+              <h4>Cart has 0 items</h4>
+              <Cart/>
+              
+            </div>
+}
+
 
       <section>
         <img className="w-full h-screen" src={Banner} alt="" />
@@ -217,10 +239,10 @@ function App() {
               />
             }
             )}
-
+          
           </div>
-          {success && <div className="  absolute w-full h-17 bg-green-400 flex justify-center z-10 text-5xl">order placed successfully</div>}
-
+          {success && <div className=" absolute  w-full h-17 bg-green-400 flex justify-center z-10 text-5xl">order placed successfully</div>}
+          {cartSuccess && <div className="absolute w-full h-17 bg-green-400 flex justify-center z-10 text-5xl">Added to cart Successfully</div> }
         </div>
 
 

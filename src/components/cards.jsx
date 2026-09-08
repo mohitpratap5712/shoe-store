@@ -2,7 +2,6 @@ import { useState } from "react";
 
 export const Cards = ({ quantity, image, title, price, handleclick, disabled, productId ,addToCart }) => {
 
-
   return (
     <div className="h-full w-56 rounded-xl flex flex-col items-center">
       {image && (

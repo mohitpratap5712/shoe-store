@@ -230,11 +230,11 @@ app.post("/login", async (req, res) => {
 
 app.post("/cart", auth, async (req, res) => {
   try {
-     console.log("POST /cart HIT");
-        console.log("BODY:", req.body);
-        console.log("USER:", req.user.id);
+    console.log("POST /cart HIT");
+    console.log("BODY:", req.body);
+    console.log("USER:", req.user.id);
 
-        const { productId, quantity = 1 } = req.body;
+    const { productId, quantity = 1 } = req.body;
 
     const product = await Product.findById(productId);
 
@@ -260,9 +260,9 @@ app.post("/cart", auth, async (req, res) => {
           }
         ]
       });
-    } 
-    
-    
+    }
+
+
     else {
       // Check if product already exists
       const existingItem = cart.items.find(
@@ -272,8 +272,8 @@ app.post("/cart", auth, async (req, res) => {
       if (existingItem) {
         // Product already exists → increase quantity
         existingItem.quantity += 1;
-      } 
-      
+      }
+
       else {
         // New product → add new item
         cart.items.push({
@@ -373,6 +373,96 @@ app.put("/cart/:productId", auth, async (req, res) => {
     });
   }
 });
+//cart increase route
+
+app.put("/cart/increase/:productId", auth, async (req, res) => {
+  try {
+    const { productId } = req.params;
+
+    const cart = await Cart.findOne(
+      { user: req.user.id }
+    )
+    if (!cart) {
+    return  res.status(404).json({
+        success: false,
+        message: "Cart not found"
+      })
+    }
+
+    const items = await cart.items.find(
+      (item) => item.product.toString() === productId
+    )
+    if (!items) {
+    return  res.status(404).json({
+        success: false,
+        message: "PRODUCT NOT FOUND IN CART "
+      });
+    }
+    items.quantity += 1
+    await cart.save()
+    res.status(200).json({
+      success: true,
+      message: "Cart item is incresed",
+      cart
+    })
+  }
+  catch (err) {
+    console.log(err)
+    res.status(404).json({
+      success: false,
+      message: "SERVER SIDE ERROR",
+      error:err.message
+    })
+  }
+})
+//decreases the quantity 
+
+app.put("/cart/decrease/:productId", auth, async (req, res) => {
+  try {
+    const { productId } = req.params.productId;
+
+    const cart = await Cart.findOne(
+      { user: req.user.id }
+    )
+    if (!cart) {
+    return res.status(404).json({
+        success: false,
+        message: "Cart not found"
+      })
+    }
+
+    const items = await cart.findOne(
+      (item) => item.product.toString === productId
+    )
+    if (!items) {
+      res.status(404).json({
+        success: false,
+        message: "PRODUCT NOT FOUND IN CART "
+      })
+    }
+    items.quantity -= 1
+
+    if (items.quantity <= 0) {
+      cart.items = cart.items.filter(
+        (item) => item.product.toString() !== productId
+      );
+    }
+
+
+    await cart.save()
+    res.status(200).json({
+      success: true,
+      message: "Cart item is decreased",
+      cart
+    })
+  }
+  catch (err) {
+    res.status(404).json({
+      success: false,
+      message: "SERVER SIDE ERROR"
+    })
+  }
+})
 //creates new orders
 app.post("/orders", auth, async (req, res) => {
 
@@ -460,7 +550,7 @@ app.get("/orders", auth, isAdmin, async (req, res) => {
 // =======================
 // Get All Users (Optional)
 // =======================
-app.get("/users", auth ,isAdmin, async (req, res) => {
+app.get("/users", auth, isAdmin, async (req, res) => {
   try {
     const users = await User.find().select("-password");
 
