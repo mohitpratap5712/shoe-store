@@ -389,7 +389,7 @@ app.put("/cart/increase/:productId", auth, async (req, res) => {
       })
     }
 
-    const items = await cart.items.find(
+    const items =  cart.items.find(
       (item) => item.product.toString() === productId
     )
     if (!items) {
@@ -416,53 +416,59 @@ app.put("/cart/increase/:productId", auth, async (req, res) => {
   }
 })
 //decreases the quantity 
-
 app.put("/cart/decrease/:productId", auth, async (req, res) => {
   try {
-    const { productId } = req.params.productId;
+    const { productId } = req.params;
 
-    const cart = await Cart.findOne(
-      { user: req.user.id }
-    )
+    const cart = await Cart.findOne({
+      user: req.user.id
+    });
+
     if (!cart) {
-    return res.status(404).json({
+      return res.status(404).json({
         success: false,
         message: "Cart not found"
-      })
+      });
     }
 
-    const items = await cart.findOne(
-      (item) => item.product.toString === productId
-    )
-    if (!items) {
-      res.status(404).json({
+    const item = cart.items.find(
+      (item) => item.product.toString() === productId
+    );
+
+    if (!item) {
+      return res.status(404).json({
         success: false,
-        message: "PRODUCT NOT FOUND IN CART "
-      })
+        message: "Product not found in cart"
+      });
     }
-    items.quantity -= 1
 
-    if (items.quantity <= 0) {
+    item.quantity -= 1;
+
+    // Remove item when quantity becomes 0
+    if (item.quantity <= 0) {
       cart.items = cart.items.filter(
         (item) => item.product.toString() !== productId
       );
     }
 
+    await cart.save();
 
-    await cart.save()
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "Cart item is decreased",
+      message: "Cart item decreased",
       cart
-    })
-  }
-  catch (err) {
-    res.status(404).json({
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
       success: false,
-      message: "SERVER SIDE ERROR"
-    })
+      message: "Server Error",
+      error: error.message
+    });
   }
-})
+});
 //creates new orders
 app.post("/orders", auth, async (req, res) => {
 
