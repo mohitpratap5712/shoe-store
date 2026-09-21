@@ -26,16 +26,17 @@ const orderSchema = new mongoose.Schema({
   finalPrice:{
     type:Number
   },
-  status: {
+ status: {
     type: String,
     enum: [
-      'CONFIRMED',
-      'SHIPED',
-      'DILIVERED',
-      'CANCEL',
-  ],
+        "Pending",
+        "Confirmed",
+        "Shipped",
+        "Delivered",
+        "Cancelled"
+    ],
     default: "Pending"
-  }
+}
 });
 
 const Order = mongoose.model("Order", orderSchema);

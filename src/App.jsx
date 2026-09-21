@@ -187,15 +187,31 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
-{ openCart &&
-  <div className="cart fixed z-1  top-0 right-0 w-[50%] h-full bg-gray-400 flex flex-col gap-8 items-center justify-center ">
-              <p className=" cursor-pointer absolute  top-0 right-50 " onClick={()=>setOpenCart(false)} >X</p>
-              <h3>HEY {} WELCOME !!</h3>
-              <h4>Cart has 0 items</h4>
-              <Cart/>
-              
+
+       {openCart && (
+        <>
+          <div 
+            className="fixed inset-0 bg-black/40 z-40 transition-opacity"
+            onClick={() => setOpenCart(false)}
+          />
+          {/* Cart Sidebar panel */}
+          <div className="fixed top-0 right-0 w-full sm:w-[50%] md:w-[35%] h-full bg-gray-100 shadow-2xl flex flex-col z-50 p-6 animate-slide-in">
+            <div className="flex justify-between items-center border-b pb-4 mb-6">
+              <h3 className="text-xl font-bold">My Cart!</h3>
+              <button 
+                className="text-2xl font-bold hover:text-red-500 transition-colors" 
+                onClick={() => setOpenCart(false)}
+              >
+                ✕
+              </button>
             </div>
-}
+            <div className="flex-1 overflow-y-auto">
+              <h4 className="text-sm text-gray-500 mb-4">Cart has  items</h4>
+              <Cart />
+            </div>
+          </div>
+        </>
+      )}
 
 
       <section onClick={()=>{setOpenCart(false)}}>
