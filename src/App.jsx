@@ -188,7 +188,7 @@ function App() {
     <>
       <RouterProvider router={router} />
 { openCart &&
-  <div className="cart absolute  top-0 right-0 w-[50%] h-full bg-amber-200 flex flex-col gap-8 items-center justify-center ">
+  <div className="cart fixed z-1  top-0 right-0 w-[50%] h-full bg-gray-400 flex flex-col gap-8 items-center justify-center ">
               <p className=" cursor-pointer absolute  top-0 right-50 " onClick={()=>setOpenCart(false)} >X</p>
               <h3>HEY {} WELCOME !!</h3>
               <h4>Cart has 0 items</h4>
@@ -198,11 +198,11 @@ function App() {
 }
 
 
-      <section>
+      <section onClick={()=>{setOpenCart(false)}}>
         <img className="w-full h-screen" src={Banner} alt="" />
       </section>
 
-      <div className="bestseller h-160 bg-gray-200 w-full">
+      <div onClick={()=>{setOpenCart(false)}} className="bestseller h-160 bg-gray-200 w-full">
 
         <div className="textseller w-full h-24 flex justify-around items-center">
           <p className="text-4xl">
@@ -242,8 +242,11 @@ function App() {
           
           </div>
           {success && <div className=" absolute  w-full h-17 bg-green-400 flex justify-center z-10 text-5xl">order placed successfully</div>}
-          {cartSuccess && <div className="absolute w-full h-17 bg-green-400 flex justify-center z-10 text-5xl">Added to cart Successfully</div> }
-        </div>
+ {cartSuccess && (
+          <div className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg text-lg font-medium animate-bounce pointer-events-auto">
+            Added to cart successfully!
+          </div>
+        )}        </div>
 
 
       </div>

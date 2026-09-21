@@ -508,17 +508,15 @@ app.post("/orders", auth, async (req, res) => {
 
     });
   }
+catch (error) {
+  console.log("ORDER ERROR:", error);
 
-  catch (error) {
-
-    console.log(error);
-
-    res.status(500).json({
-      message: "can't upload the data"
-
-    });
-
-  }
+  res.status(500).json({
+    success: false,
+    message: error.message,
+    error: error
+  });
+}
 
 });
 app.get("/orders", auth, isAdmin, async (req, res) => {

@@ -70,28 +70,33 @@ export const Cart = () => {
 
     useEffect(() => {
         getcart()
-    }, [],increaseQuantity,decreaseCart)
+    }, [],cartSuccess)
     
     return (
         <>
-            <div className="cartDiv h-full w-[50%] flex flex-col gap-6 font-bold relative wrap- ">
+            <div className="cartDiv h-full w-[50%] flex flex-col gap-6 font-bold overflow-scroll  [&::-webkit-scrollbar]:hidden">
                 {
 
                     cart?.items && cart.items.length > 0 ? (
                         
                         cart?.items?.map((item) =>  {
-                            console.log("CART ITEM:", item)
                             return(
-                            <div key={item._id} >
-                                <p>
+                            <div  className='flex flex-row ' key={item._id} >
+                              
+                              <div className="left mr-25">
+                                 <p>
+                                   <img width={"100px"} src={item.product.image} alt="" />
+                                </p>
+                              </div>
+                                <div className="right">
+                                             <p>
                                     {item.product.title}
                                 </p>
-                                <p>
-                                    {item.product.image}
-                                </p>
+                               
                                 <p>
                                     Price: ₹{item.product.price}
                                 </p>
+
 
                                 <div className='quantity-heading flex gap-4' >
                                     Quentity
@@ -102,6 +107,8 @@ export const Cart = () => {
 
                                     </div>
                                 </div>
+                                    </div>
+                       
                             </div>
                             )
 })) : (
@@ -109,7 +116,7 @@ export const Cart = () => {
                     )
                 }
             </div>
-                                            <div className="checkout bg-blue-700 absolute bottom-5 right-6 p-6 w-2xl flex justify-center  items-center  text-amber-50"><button> Checkout</button></div>
+                                            <div className="checkout bg-blue-700 absolute bottom-5 right-6 p-6 w-[90%] flex justify-center  items-center  text-amber-50"><button> Checkout</button></div>
 
         </>
 
