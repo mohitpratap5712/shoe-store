@@ -6,29 +6,29 @@ export const Cart = () => {
     const [cartSuccess, setcartSuccess] = useState(false)
     const [quantity, Updatedquantity] = useState()
     let increase = 0;
-
     //This is for the increasing the quantity 
-    const increaseQuantity = async (productId) => {
+  const increaseQuantity = async (productId) => {
+    try {
         const token = localStorage.getItem("token");
-        try {
-            const response = axios.put(`https://shoe-store-h5gu.onrender.com/cart/increase/${productId}`,
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+
+        const response = await axios.put(
+            `https://shoe-store-h5gu.onrender.com/cart/increase/${productId}`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
-            )
-            console.log("Cart is updated success")
-            // setcart((await response).data.cart)
+            }
+        );
 
-            getcart()
-        }
-        catch (err) {
-            console.log(err)
-        }
+        console.log("Updated cart:", response.data.cart);
+
+        setcart(response.data.cart);
+
+    } catch (error) {
+        console.log(error.response?.data || error);
     }
-
+};
 
     const decreaseCart = async (productId) => {
   try {
@@ -36,7 +36,7 @@ export const Cart = () => {
     console.log(token)
 
     const response = await axios.put(
-      `https://shoe-store-h5gu.onrender.com/cart/decrease/${productId} `,
+      `https://shoe-store-h5gu.onrender.com/cart/decrease/${productId}`,
       {},
       {
         headers: {
@@ -46,8 +46,7 @@ export const Cart = () => {
     );
 
     console.log(response.data);
-
-    // setCart(response.data.cart);
+    setcart((await response).data.cart);
   } catch (error) {
     console.log(error.response?.data || error);
   }
@@ -71,15 +70,19 @@ export const Cart = () => {
 
     useEffect(() => {
         getcart()
-    }, [])
+    }, [],increaseQuantity,decreaseCart)
+    
     return (
         <>
-            <div className="cartDiv h-full w-[50%] flex flex-col gap-6 font-bold ">
+            <div className="cartDiv h-full w-[50%] flex flex-col gap-6 font-bold relative wrap- ">
                 {
 
                     cart?.items && cart.items.length > 0 ? (
-                        cart?.items?.map((item) => (
-                            <div key={item._id}>
+                        
+                        cart?.items?.map((item) =>  {
+                            console.log("CART ITEM:", item)
+                            return(
+                            <div key={item._id} >
                                 <p>
                                     {item.product.title}
                                 </p>
@@ -100,12 +103,14 @@ export const Cart = () => {
                                     </div>
                                 </div>
                             </div>
-
-                        ))) : (
+                            )
+})) : (
                         <p>OOPS!! Empty cart </p>
                     )
                 }
             </div>
+                                            <div className="checkout bg-blue-700 absolute bottom-5 right-6 p-6 w-2xl flex justify-center  items-center  text-amber-50"><button> Checkout</button></div>
+
         </>
 
 
