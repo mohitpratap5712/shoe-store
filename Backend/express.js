@@ -453,6 +453,7 @@ app.put("/cart/decrease/:productId", auth, async (req, res) => {
     }
 
     await cart.save();
+    await cart.populate("items.product");
 
     return res.status(200).json({
       success: true,
